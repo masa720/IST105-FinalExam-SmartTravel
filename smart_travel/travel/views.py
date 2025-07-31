@@ -15,7 +15,8 @@ from .form import TravelForm
 def get_mongodb_client():
     """Connect to MongoDB database"""
     try:
-        client = MongoClient('localhost', 27017)
+        MONGO_URI = os.getenv('MONGO_URI')
+        client = MongoClient(MONGO_URI)
         return client
     except Exception as e:
         print(f"MongoDB connection error: {e}")
