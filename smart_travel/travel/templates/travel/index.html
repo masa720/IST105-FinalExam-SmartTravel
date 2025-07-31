@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Travel Planner</title>
+</head>
+<body>
+    <h1>Smart Travel Planner</h1>
+    <h2>Masaki Shibata</h2>
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="start_city">Select start city:</label>
+        <select name="start_city" id="start_city">
+            {% for city in cities %}
+                <option value="{{ city.name }}" {% if form.start_city.value == city.name %}selected{% endif %}>{{ city.name }}</option>
+            {% endfor %}
+        </select>
+
+        <label for="end_city">Select end city:</label>
+        <select name="end_city" id="end_city">
+            {% for city in cities %}
+                <option value="{{ city.name }}" {% if form.end_city.value == city.name %}selected{% endif %}>{{ city.name }}</option>
+            {% endfor %}
+        </select>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    {% if weather_start %}
+        <h2>Start City Weather: {{ weather_start.temperature }}°C, {{ weather_start.description }}</h2>
+        <h2>End City Weather: {{ weather_end.temperature }}°C, {{ weather_end.description }}</h2>
+    {% endif %}
+
+    {% if route_details %}
+        <h2>Route Details:</h2>
+        <p><strong>Distance:</strong> {{ route_details.distance }} km</p>
+        <p><strong>Duration:</strong> {{ route_details.duration }} minutes</p>
+        <ul>
+            {% for step in route_details.steps %}
+                <li>{{ step.instruction }} ({{ step.distance }} km)</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if travel_advice %}
+        <h2>Travel Advice:</h2>
+        <p>{{ travel_advice }}</p>
+    {% endif %}
+
+    <p><a href="{% url 'travel:history' %}">View History</a></p>
+</body>
+</html>

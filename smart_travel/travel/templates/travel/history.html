@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Travel History</title>
+</head>
+<body>
+    <h1>Travel Query History</h1>
+    <h2>Masaki Shibata</h2>
+
+    <p><a href="{% url 'travel:index' %}">Back to Home</a></p>
+
+    {% if travel_queries %}
+        <h2>Previous Travel Queries</h2>
+        {% for query in travel_queries %}
+            <p><strong>From {{ query.start_city }} to {{ query.end_city }}</strong></p>
+            <p>Date: {{ query.timestamp|date:"Y-m-d H:i:s" }}</p>
+            <p>Route Summary: {{ query.route_summary }}</p>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <p>No travel queries found.</p>
+    {% endif %}
+</body>
+</html>
