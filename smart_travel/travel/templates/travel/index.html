@@ -9,17 +9,17 @@
     <h1>Smart Travel Planner</h1>
     <h2>Masaki Shibata</h2>
 
-    <form method="post">
+    <form method="post" id="travel-form" style="display: flex; flex-direction: column; width: 300px;">
         {% csrf_token %}
         <label for="start_city">Select start city:</label>
-        <select name="start_city" id="start_city">
+        <select name="start_city" id="start_city" style="margin-bottom: 10px;">
             {% for city in cities %}
                 <option value="{{ city.name }}" {% if form.start_city.value == city.name %}selected{% endif %}>{{ city.name }}</option>
             {% endfor %}
         </select>
 
         <label for="end_city">Select end city:</label>
-        <select name="end_city" id="end_city">
+        <select name="end_city" id="end_city" style="margin-bottom: 10px;">
             {% for city in cities %}
                 <option value="{{ city.name }}" {% if form.end_city.value == city.name %}selected{% endif %}>{{ city.name }}</option>
             {% endfor %}
@@ -29,24 +29,26 @@
     </form>
 
     {% if weather_start %}
-        <h2>Start City Weather: {{ weather_start.temperature }}°C, {{ weather_start.description }}</h2>
-        <h2>End City Weather: {{ weather_end.temperature }}°C, {{ weather_end.description }}</h2>
-    {% endif %}
+        <h3>Start City: {{ form.start_city.value }}</h3>
+        <p>Weather: {{ weather_start.temperature }}°C, {{ weather_start.description }}</p>
 
-    {% if route_details %}
-        <h2>Route Details:</h2>
-        <p><strong>Distance:</strong> {{ route_details.distance }} km</p>
-        <p><strong>Duration:</strong> {{ route_details.duration }} minutes</p>
-        <ul>
+        <h3>End City: {{ form.end_city.value }}</h3>
+        <p>Weather: {{ weather_end.temperature }}°C, {{ weather_end.description }}</p>
+
+        <h3>Recommended Route:</h3>
+        <p>Distance: {{ route_details.distance }} km</p>
+        <p>Estimated driving time: {{ route_details.duration }} minutes</p>
+        
+        <h4>Route Steps:</h4>
+        <ol>
             {% for step in route_details.steps %}
-                <li>{{ step.instruction }} ({{ step.distance }} km)</li>
+                <li>{{ step.instruction }} for {{ step.distance }} km</li>
             {% endfor %}
-        </ul>
-    {% endif %}
+        </ol>
 
-    {% if travel_advice %}
-        <h2>Travel Advice:</h2>
-        <p>{{ travel_advice }}</p>
+        <p><strong>Advice:</strong> {{ travel_advice }}</p>
+        
+        <button type="submit" name="save_query" value="1" form="travel-form">Save query to history</button>
     {% endif %}
 
     <p><a href="{% url 'travel:history' %}">View History</a></p>
