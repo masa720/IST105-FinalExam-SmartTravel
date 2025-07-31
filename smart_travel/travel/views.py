@@ -110,14 +110,14 @@ def index(request):
             current_time = datetime.now(pacific_tz)
             travel_advice = get_travel_advice(weather_start, weather_end, current_time)
 
-            # Save to MongoDB
-            route_summary = json.dumps({
-                'distance': route_details['distance'] if route_details else 0,
-                'duration': route_details['duration'] if route_details else 0,
-                'steps_count': len(route_details['steps']) if route_details else 0
-            })
-
-            save_travel_query(start_city, end_city, route_summary)
+            # Save to MongoDB only if save button was clicked
+            if 'save_query' in request.POST:
+                route_summary = json.dumps({
+                    'distance': route_details['distance'] if route_details else 0,
+                    'duration': route_details['duration'] if route_details else 0,
+                    'steps_count': len(route_details['steps']) if route_details else 0
+                })
+                save_travel_query(start_city, end_city, route_summary)
 
     else:
         form = TravelForm()
